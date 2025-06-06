@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Héroe de RRHH: La Misión SAE</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #2c3e50; /* Azul corporativo oscuro */
+            color: #ecf0f1; /* Blanco suave */
+            margin: 0;
+            padding: 10px; /* Padding para evitar que el contenido toque los bordes en móvil */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            box-sizing: border-box; /* Para que el padding no afecte el width total */
+        }
+
+        .game-container {
+            border: 4px solid #3498db; /* Azul brillante */
+            padding: 15px; /* Reducir padding interno en móvil */
+            background-color: #34495e; /* Azul grisáceo */
+            box-shadow: 0 0 15px #3498db80;
+            width: 100%; /* Ocupar todo el ancho disponible */
+            max-width: 700px; /* Ancho máximo para tablets/desktop */
+            min-height: 90vh; /* Ocupar buena parte de la altura */
+            max-height: 95vh; /* Evitar scroll excesivo */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden; /* Evitar que el contenedor crezca más de la cuenta */
+        }
+
+        h1 {
+            color: #f1c40f; /* Amarillo para destacar */
+            font-size: 1.8em; /* Ajustar para móvil */
+            text-shadow: 2px 2px #c0392b; /* Sombra roja oscura */
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        
+        h2 {
+            color: #e0e0e0;
+            font-size: 1.0em; /* Ajustar para móvil */
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 0.8em; /* Ajustar para móvil */
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        button {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #2ecc71; /* Verde para acciones positivas */
+            color: #ffffff;
+            border: 2px solid #27ae60; /* Verde más oscuro */
+            padding: 10px 15px; /* Ajustar padding para móvil */
+            font-size: 0.8em; /* Ajustar para móvil */
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            margin: 4px;
+            min-width: 130px; 
+        }
+
+        button:hover {
+            background-color: #27ae60;
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        button.critical {
+            background-color: #e74c3c; /* Rojo para acciones críticas */
+            border-color: #c0392b;
+        }
+        button.critical:hover {
+            background-color: #c0392b;
+        }
+
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap; /* Para que se adapte en pantallas pequeñas */
+            margin-bottom: 15px;
+            background-color: #2c3e50;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 0.75em; /* Ajustar para móvil */
+        }
+        .stats-bar span {
+            color: #bdc3c7; /* Gris claro */
+            margin: 2px 5px; /* Espacio entre elementos */
+        }
+        .stats-bar strong {
+            color: #2ecc71; /* Verde */
+        }
+        #timerDisplay strong {
+            color: #f1c40f; /* Amarillo para el tiempo */
+        }
+        
+        .game-area {
+            min-height: 180px; 
+            max-height: 200px; /* Limitar altura para que quepan los botones */
+            border: 2px dashed #7f8c8d; 
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #2c3e50;
+            position: relative;
+            overflow-y: auto; 
+        }
+
+        .event-item {
+            background-color: #f1c40f; 
+            color: #333;
+            padding: 7px 10px;
+            margin: 6px auto; 
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            width: fit-content;
+            max-width: 95%;
+            font-size: 0.7em; 
+            border-left: 4px solid #f39c12; 
+        }
+        .event-item.selected {
+            background-color: #2ecc71; 
+            color: #fff;
+            transform: scale(1.02); /* Reducir un poco el scale para móvil */
+            border-left-color: #27ae60;
+        }
+        .event-item.urgent { background-color: #e74c3c; color: white; border-left-color: #c0392b;} 
+        .event-item.complex { background-color: #9b59b6; color: white; border-left-color: #8e44ad;} 
+
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 10px; /* Menos margen inferior */
+        }
+
+        .message-area {
+            min-height: 35px; 
+            font-size: 0.8em;
+            color: #2ecc71; 
+            padding: 5px;
+        }
+        .message-area.error {
+            color: #e74c3c; 
+        }
+
+        .screen { display: none; flex-direction: column; justify-content: center; align-items: center; height: 100%;}
+        .screen.active { display: flex; } /* Usar flex para centrar contenido en pantallas activas */
+
+        .avatar-hr {
+            width: 60px; /* Más pequeño para móvil */
+            height: 75px;
+            background-color: #5dade2; 
+            border: 2px solid #2874a6; 
+            margin: 10px auto;
+            position: relative;
+            image-rendering: pixelated;
+        }
+        .avatar-hr::before { 
+            content: '';
+            position: absolute;
+            top: 8px; left: 18px; /* Ajustar pos */
+            width: 24px; height: 24px; /* Ajustar tamaño */
+            background-color: #f5cba7; 
+            border: 1px solid #2874a6;
+        }
+        .avatar-hr::after { 
+            content: '';
+            position: absolute;
+            top: 15px; left: 12px; 
+            width: 8px; height: 15px;
+            background-color: #7f8c8d; 
+            border: 1px solid #34495e;
+            border-radius: 3px 0 0 3px;
+        }
+        .headset-mic {
+            position: absolute;
+            top: 22px; left: 4px;
+            width: 12px; height: 2px;
+            background-color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+
+        <!-- Pantalla de Intro -->
+        <div id="introScreen" class="screen active">
+            <h1>Héroe de RRHH: La Misión SAE</h1>
+            <div class="avatar-hr">
+                <div class="headset-mic"></div>
+            </div>
+            <p>¡Bienvenido/a! Tu misión: gestionar consultas de empleados en <strong>90 segundos</strong>. ¡Demuestra tu pericia!</p>
+            <button id="startGameBtn">¡Comenzar Misión!</button>
+        </div>
+
+        <!-- Pantalla de Juego -->
+        <div id="gameScreen" class="screen">
+            <div class="stats-bar">
+                <span>Satisfacción: <strong id="score">0</strong></span>
+                <span>Precisión: <strong id="accuracy">100%</strong></span>
+                <span>Paciencia: <strong id="lives">5</strong></span>
+                <span id="timerDisplay">Tiempo: <strong id="timer">01:30</strong></span>
+            </div>
+            
+            <h2>Consultas Entrantes:</h2>
+            <div id="gameArea" class="game-area">
+                <!-- Las consultas aparecerán aquí -->
+            </div>
+
+            <p id="narratorMessage" style="font-style: italic; color: #bdc3c7; min-height: 25px; margin-top:8px; font-size: 0.75em;">Selecciona consulta y acción.</p>
+            <div class="action-buttons">
+                <button data-action="INFORMAR">Info</button> <!-- Textos más cortos en botones -->
+                <button data-action="RESOLVER">Resolver</button>
+                <button data-action="PROCESAR">Procesar</button>
+                <button data-action="ESCALAR" class="critical">Escalar</button>
+                <button data-action="APOYAR">Apoyar</button>
+                <button data-action="DOCUMENTAR">Cerrar</button>
+            </div>
+            <div id="messageArea" class="message-area">
+                Esperando tu experta intervención...
+            </div>
+        </div>
+
+        <!-- Pantalla de Fin de Juego -->
+        <div id="gameOverScreen" class="screen">
+            <h1>¡Jornada Completada!</h1>
+            <p id="finalMessage"></p>
+            <h2>Resumen:</h2>
+            <p>Satisfacción: <strong id="finalScore"></strong></p>
+            <p>Precisión: <strong id="finalAccuracy"></strong></p>
+            <p>Gestionadas: <strong id="finalTasksManaged"></strong></p>
+            <p>Críticos: <strong id="finalCriticalCases"></strong></p>
+            <p>"¡Gran esfuerzo! El SAE es un reto diario."</p>
+            <button id="playAgainBtn">¿Otra Ronda?</button>
+        </div>
+
+    </div>
+
+    <script>
+        const introScreen = document.getElementById('introScreen');
+        const gameScreen = document.getElementById('gameScreen');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        
+        const startGameBtn = document.getElementById('startGameBtn');
+        const playAgainBtn = document.getElementById('playAgainBtn');
+        
+        const scoreDisplay = document.getElementById('score');
+        const accuracyDisplay = document.getElementById('accuracy');
+        const livesDisplay = document.getElementById('lives');
+        const timerDisplay = document.getElementById('timer'); // Elemento para el temporizador
+        
+        const gameArea = document.getElementById('gameArea');
+        const messageArea = document.getElementById('messageArea');
+        const narratorMessage = document.getElementById('narratorMessage');
+        
+        const actionButtons = document.querySelectorAll('.action-buttons button');
+
+        const finalScoreDisplay = document.getElementById('finalScore');
+        const finalAccuracyDisplay = document.getElementById('finalAccuracy');
+        const finalTasksManagedDisplay = document.getElementById('finalTasksManaged');
+        const finalCriticalCasesDisplay = document.getElementById('finalCriticalCases');
+        const finalMessage = document.getElementById('finalMessage');
+
+        let score = 0; 
+        let lives = 5; 
+        let totalActions = 0;
+        let correctActions = 0;
+        let criticalCasesManaged = 0;
+        let tasksManaged = 0;
+
+        let currentEvents = [];
+        let selectedEvent = null;
+        let eventSpawnInterval;
+        let eventIdCounter = 0;
+
+        // --- Variables del Temporizador ---
+        const GAME_DURATION_SECONDS = 90; // 1.5 minutos
+        let timeLeft = GAME_DURATION_SECONDS;
+        let timerInterval;
+        // --- Fin Variables del Temporizador ---
+
+        const MAX_EVENTS_ON_SCREEN = 5; // Reducir un poco para móviles
+        const EVENT_SPAWN_RATE_MS = 3200; 
+
+        const eventTypes = [
+            { name: "Consulta nómina", type: "QUERY_PAYROLL", requiredAction: "INFORMAR", points: 10, narrator: "Duda sobre nómina. ¡Claridad!" },
+            { name: "Fallo Portal Empleado", type: "TECHNICAL_ISSUE", requiredAction: "RESOLVER", points: 15, narrator: "¡Acceso denegado! Ayuda." },
+            { name: "Solicitud vacaciones", type: "REQUEST_LEAVE", requiredAction: "PROCESAR", points: 10, narrator: "Merecido descanso. Procesa." },
+            { name: "Duda seguro médico", type: "QUERY_BENEFITS", requiredAction: "INFORMAR", points: 10, narrator: "Beneficios importantes. Explica." },
+            { name: "Reporte acoso (URGENTE)", type: "URGENT_CONFLICT", class: "urgent", requiredAction: "ESCALAR", points: 30, penalty: 2, narrator: "¡ALERTA! Situación delicada. Escala YA." },
+            { name: "Cambio datos personales", type: "DATA_CHANGE", requiredAction: "PROCESAR", points: 5, narrator: "Actualización de datos." },
+            { name: "Empleado/a estresado/a", type: "EMOTIONAL_SUPPORT", class: "complex", requiredAction: "APOYAR", points: 20, narrator: "Necesita ser escuchado/a. Apoya." },
+            { name: "Duda teletrabajo", type: "POLICY_QUERY", requiredAction: "INFORMAR", points: 10, narrator: "Teletrabajo. Aclara política." },
+            { name: "Error registro horario", type: "TIME_TRACKING_ERROR", requiredAction: "RESOLVER", points: 10, narrator: "Error en fichaje. ¡Corrige!" },
+            { name: "Solicitud certificado", type: "CERTIFICATE_REQUEST", requiredAction: "PROCESAR", points: 5, narrator: "Piden certificado. ¡Adelante!" },
+            { name: "Feedback positivo (cerrar)", type: "POSITIVE_FEEDBACK", requiredAction: "DOCUMENTAR", points: 5, narrator: "¡Buenas noticias! Documenta." }
+        ]; // Narrador más corto para móviles
+
+        function switchScreen(screenToShow) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            screenToShow.classList.add('active');
+        }
+
+        function updateStats() {
+            scoreDisplay.textContent = score;
+            livesDisplay.textContent = lives;
+            const acc = totalActions > 0 ? Math.round((correctActions / totalActions) * 100) : 100;
+            accuracyDisplay.textContent = `${acc}%`;
+        }
+
+        // --- Funciones del Temporizador ---
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            const formattedMinutes = String(minutes).padStart(2, '0');
+            const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+            return `${formattedMinutes}:${formattedSeconds}`;
+        }
+
+        function updateTimerDisplay() {
+            timerDisplay.textContent = formatTime(timeLeft);
+        }
+
+        function startTimer() {
+            timeLeft = GAME_DURATION_SECONDS;
+            updateTimerDisplay();
+            if(timerInterval) clearInterval(timerInterval); // Limpiar intervalo anterior si existe
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    gameOver("¡Se acabó el tiempo! Intenta ser más rápido/a la próxima vez.", false);
+                }
+            }, 1000);
+        }
+        // --- Fin Funciones del Temporizador ---
+
+        function showMessage(text, isError = false) {
+            messageArea.textContent = text;
+            messageArea.className = 'message-area'; 
+            if (isError) {
+                messageArea.classList.add('error');
+            }
+        }
+        
+        function showNarratorMessage(text) {
+            narratorMessage.textContent = text;
+        }
+
+        function spawnEvent() {
+            if (currentEvents.length >= MAX_EVENTS_ON_SCREEN || lives <= 0 || timeLeft <= 0) {
+                return;
+            }
+
+            const randomEventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+            const eventElement = document.createElement('div');
+            eventIdCounter++;
+            const eventId = `event-${eventIdCounter}`;
+            eventElement.id = eventId;
+            eventElement.classList.add('event-item');
+            if (randomEventType.class) {
+                eventElement.classList.add(randomEventType.class);
+            }
+            eventElement.textContent = randomEventType.name;
+            eventElement.dataset.type = randomEventType.type;
+            eventElement.dataset.requiredAction = randomEventType.requiredAction;
+            eventElement.dataset.points = randomEventType.points;
+            eventElement.dataset.narrator = randomEventType.narrator;
+            
+            eventElement.addEventListener('click', () => selectEvent(eventElement, randomEventType.narrator));
+            
+            gameArea.appendChild(eventElement);
+            currentEvents.push({ id: eventId, element: eventElement, ...randomEventType });
+            gameArea.scrollTop = gameArea.scrollHeight;
+        }
+        
+        function selectEvent(eventElement, narratorText) {
+            if (lives <= 0 || timeLeft <= 0) return; // No permitir seleccionar si el juego terminó
+
+            if (selectedEvent && selectedEvent.element) {
+                selectedEvent.element.classList.remove('selected');
+            }
+            eventElement.classList.add('selected');
+            selectedEvent = currentEvents.find(e => e.id === eventElement.id);
+            showMessage(`"${selectedEvent.name}". Elige acción.`, false);
+            showNarratorMessage(narratorText || "Analiza y actúa.");
+        }
+
+        function handleAction(action) {
+            if (!selectedEvent || lives <= 0 || timeLeft <= 0) {
+                if (!selectedEvent && (lives > 0 && timeLeft > 0)) {
+                     showMessage("Selecciona una consulta.", true);
+                }
+                return;
+            }
+            
+            totalActions++;
+            const eventData = selectedEvent;
+
+            if (eventData.requiredAction === action) {
+                score += parseInt(eventData.points);
+                correctActions++;
+                tasksManaged++;
+                if (eventData.type === "URGENT_CONFLICT") criticalCasesManaged++;
+                
+                showMessage(`¡Correcto! "${eventData.name}" OK. +${eventData.points}pts.`, false);
+                showNarratorMessage("¡Bien hecho!");
+
+                eventData.element.remove();
+                currentEvents = currentEvents.filter(e => e.id !== eventData.id);
+                selectedEvent = null;
+
+                setTimeout(spawnEvent, EVENT_SPAWN_RATE_MS / 2.5); // Un poco más rápido
+
+            } else {
+                lives--;
+                score -= (eventData.penalty || 1) * 5; 
+                showMessage(`Error en "${eventData.name}". -1 Paciencia.`, true);
+                showNarratorMessage("¡Uy! No era eso. Precisión.");
+                if (lives <= 0) {
+                    gameOver("Te has quedado sin paciencia. ¡Más calma la próxima vez!", false);
+                    return;
+                }
+            }
+            updateStats();
+            // No hay condición de victoria por tareas, solo por tiempo o paciencia.
+        }
+
+        function initGame() {
+            score = 0;
+            lives = 5;
+            totalActions = 0;
+            correctActions = 0;
+            criticalCasesManaged = 0;
+            tasksManaged = 0;
+            eventIdCounter = 0;
+            currentEvents.forEach(ev => ev.element.remove());
+            currentEvents = [];
+            selectedEvent = null;
+            
+            updateStats();
+            showMessage("¡La Misión SAE ha comenzado!", false);
+            showNarratorMessage("Gestiona las consultas antes de que acabe el tiempo o la paciencia.");
+            switchScreen(gameScreen);
+            
+            startTimer(); // Iniciar el temporizador
+            
+            if(eventSpawnInterval) clearInterval(eventSpawnInterval);
+            eventSpawnInterval = setInterval(spawnEvent, EVENT_SPAWN_RATE_MS);
+            for(let i=0; i < 2; i++) setTimeout(spawnEvent, i * 400 + 200); 
+        }
+
+        function gameOver(message, isWin = false) { // isWin no se usa actualmente para victoria por tareas
+            clearInterval(eventSpawnInterval);
+            clearInterval(timerInterval); // Detener el temporizador
+            switchScreen(gameOverScreen);
+            
+            const finalAcc = totalActions > 0 ? Math.round((correctActions / totalActions) * 100) : 0;
+            finalScoreDisplay.textContent = score;
+            finalAccuracyDisplay.textContent = `${finalAcc}%`;
+            finalTasksManagedDisplay.textContent = tasksManaged;
+            finalCriticalCasesDisplay.textContent = criticalCasesManaged;
+
+            finalMessage.textContent = message; // Mostrar el mensaje de game over (tiempo, paciencia)
+            
+            if (timeLeft > 0 && lives > 0 && finalAcc >= 80) { // Si terminó por otra razón (no implementado aun) pero con buen score
+                 finalMessage.textContent += " ¡Excelente desempeño bajo presión!";
+            } else if (timeLeft <= 0 && tasksManaged > 5 && finalAcc >= 70) { // Si se acabó el tiempo pero gestionó bien
+                finalMessage.textContent += " ¡Buena cantidad de casos resueltos!";
+            } else if (lives <= 0 && tasksManaged > 3) { // Si se quedó sin paciencia pero avanzó
+                finalMessage.textContent += " ¡Controla los nervios para la próxima!";
+            }
+
+            showNarratorMessage(""); 
+        }
+
+        startGameBtn.addEventListener('click', initGame);
+        playAgainBtn.addEventListener('click', initGame);
+
+        actionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                handleAction(button.dataset.action);
+            });
+        });
+
+        updateStats(); 
+        updateTimerDisplay(); // Mostrar tiempo inicial en la intro si es necesario (ya está en 01:30 por defecto)
+        switchScreen(introScreen); 
+
+    </script>
+</body>
+</html>
