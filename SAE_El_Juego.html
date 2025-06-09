@@ -160,38 +160,101 @@
         .screen { display: none; flex-direction: column; justify-content: center; align-items: center; height: 100%;}
         .screen.active { display: flex; } /* Usar flex para centrar contenido en pantallas activas */
 
+            /* ===== INICIO DEL NUEVO CÓDIGO DEL AVATAR ===== */
         .avatar-hr {
-            width: 60px; /* Más pequeño para móvil */
+            width: 60px; /* Mantenemos el mismo tamaño total */
             height: 75px;
-            background-color: #5dade2; 
-            border: 2px solid #2874a6; 
             margin: 10px auto;
             position: relative;
-            image-rendering: pixelated;
+            image-rendering: pixelated; /* Importante para el estilo pixel art */
+            background-color: #5DADE2; /* Color del traje/cuerpo (azul claro) */
+            border: 1px solid #2E86C1; /* Borde del traje (azul más oscuro) */
         }
-        .avatar-hr::before { 
-            content: '';
+
+        .avatar-hr .head {
             position: absolute;
-            top: 8px; left: 18px; /* Ajustar pos */
-            width: 24px; height: 24px; /* Ajustar tamaño */
-            background-color: #f5cba7; 
-            border: 1px solid #2874a6;
+            width: 30px;
+            height: 30px;
+            background-color: #F5CBA7; /* Tono de piel */
+            top: 8px;
+            left: 15px; /* Centrar la cabeza sobre el cuerpo */
+            border: 1px solid #D35400; /* Contorno de piel más oscuro */
+            border-radius: 3px 3px 0 0; /* Ligeramente redondeado arriba si se desea */
         }
-        .avatar-hr::after { 
-            content: '';
+
+        .avatar-hr .hair { /* Opcional: un poco de pelo */
             position: absolute;
-            top: 15px; left: 12px; 
-            width: 8px; height: 15px;
-            background-color: #7f8c8d; 
-            border: 1px solid #34495e;
-            border-radius: 3px 0 0 3px;
+            width: 32px; /* Un poco más ancho que la cabeza */
+            height: 10px;
+            background-color: #A04000; /* Marrón oscuro para el pelo */
+            top: 5px; /* Encima de la cabeza */
+            left: 14px;
+            border-radius: 4px 4px 0 0;
         }
-        .headset-mic {
+
+        .avatar-hr .eyes {
             position: absolute;
-            top: 22px; left: 4px;
-            width: 12px; height: 2px;
-            background-color: #7f8c8d;
+            width: 6px;
+            height: 4px;
+            background-color: #2C3E50; /* Ojos oscuros */
+            top: 16px; /* Dentro de la cabeza */
+            left: 19px; /* Ojo izquierdo */
+            box-shadow: 10px 0 0 #2C3E50; /* Ojo derecho usando box-shadow */
         }
+
+        .avatar-hr .headset-band {
+            position: absolute;
+            width: 34px; /* Cruza la cabeza */
+            height: 6px;
+            background-color: #7F8C8D; /* Gris para el headset */
+            top: 10px; /* Sobre el pelo/cabeza */
+            left: 13px;
+            border: 1px solid #566573; /* Borde del headset */
+            border-radius: 3px;
+        }
+
+        .avatar-hr .earpiece {
+            position: absolute;
+            width: 12px;
+            height: 14px;
+            background-color: #34495E; /* Gris oscuro para el auricular */
+            border: 1px solid #2C3E50;
+            top: 18px; /* A la altura de la oreja */
+            left: 8px; /* Lado izquierdo */
+            border-radius: 2px;
+        }
+
+        .avatar-hr .mic-arm {
+            position: absolute;
+            width: 4px; /* Grosor del brazo */
+            height: 12px; /* Largo del brazo */
+            background-color: #7F8C8D;
+            top: 28px; /* Desde el auricular hacia abajo */
+            left: 10px;
+            transform: rotate(20deg); /* Ligeramente inclinado */
+            border-radius: 2px;
+        }
+
+        .avatar-hr .mic-tip {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #34495E;
+            border-radius: 50%; /* Punta redonda */
+            top: 38px;
+            left: 13px; /* Al final del brazo del mic */
+        }
+
+        .avatar-hr .shirt-collar { /* Opcional: detalle de camisa */
+            position: absolute;
+            width: 16px;
+            height: 6px;
+            background-color: #ECF0F1; /* Blanco para la camisa */
+            top: 38px; /* Justo debajo de la cabeza */
+            left: 22px;
+            clip-path: polygon(50% 100%, 0 0, 100% 0); /* Forma de V invertida */
+        }
+        /* ===== FIN DEL NUEVO CÓDIGO DEL AVATAR ===== */
     </style>
 </head>
 <body>
@@ -201,7 +264,15 @@
         <div id="introScreen" class="screen active">
             <h1>Héroe de RRHH: La Misión SAE</h1>
             <div class="avatar-hr">
-                <div class="headset-mic"></div>
+               <div class="hair"></div>
+               <div class="headset-band"></div>
+               <div class="head">
+                   <div class="eyes"></div>
+              </div>
+              <div class="earpiece"></div>
+              <div class="mic-arm"></div>
+              <div class="mic-tip"></div>
+              <div class="shirt-collar"></div>
             </div>
             <p>¡Bienvenido/a! Tu misión: gestionar consultas de empleados en <strong>90 segundos</strong>. ¡Demuestra tu pericia!</p>
             <button id="startGameBtn">¡Comenzar Misión!</button>
