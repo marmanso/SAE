@@ -223,11 +223,11 @@
 
             <p id="narratorMessage" style="font-style: italic; color: #bdc3c7; min-height: 25px; margin-top:8px; font-size: 0.75em;">Selecciona consulta y acción.</p>
             <div class="action-buttons">
-                <button data-action="INFORMAR">Info</button> <!-- Textos más cortos en botones -->
-                <button data-action="ESPECIALISTA">Resolver</button>
+                <button data-action="INFORMAR">Informar</button> <!-- Textos más cortos en botones -->
+                <button data-action="ESPECIALISTA">Especialista</button>
                 <button data-action="PROCESAR">Procesar</button>
                 <button data-action="ESCALAR" class="critical">Escalar</button>
-                <button data-action="REPORTAR">Apoyar</button>
+                <button data-action="REPORTAR">Reportar</button>
                 <button data-action="DOCUMENTAR">Cerrar</button>
             </div>
             <div id="messageArea" class="message-area">
@@ -309,7 +309,7 @@
             { name: "Duda su teletrabajo", type: "POLICY_QUERY", requiredAction: "ESPECIALISTA", points: 10, narrator: "Duda personal Teletrabajo. Escala" },
             { name: "Error registro horario", type: "TIME_TRACKING_ERROR", requiredAction: "PROCESAR", points: 10, narrator: "Error en fichaje. ¡Corrige!" },
             { name: "Solicitud certificado", type: "CERTIFICATE_REQUEST", requiredAction: "PROCESAR", points: 5, narrator: "Piden certificado. ¡Adelante!" },
-            { name: "Feedback positivo (cerrar)", type: "POSITIVE_FEEDBACK", requiredAction: "DOCUMENTAR", points: 5, narrator: "¡Buenas noticias! Documenta." }
+            { name: "Duda Excedencia", type: "POLICY_QUERY", requiredAction: "ESPECIALISTA", points: 5, narrator: "Tiene dudas sobre solicitud." }
         ]; // Narrador más corto para móviles
 
         function switchScreen(screenToShow) {
