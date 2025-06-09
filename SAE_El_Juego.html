@@ -224,10 +224,10 @@
             <p id="narratorMessage" style="font-style: italic; color: #bdc3c7; min-height: 25px; margin-top:8px; font-size: 0.75em;">Selecciona consulta y acción.</p>
             <div class="action-buttons">
                 <button data-action="INFORMAR">Info</button> <!-- Textos más cortos en botones -->
-                <button data-action="RESOLVER">Resolver</button>
+                <button data-action="ESPECIALISTA">Resolver</button>
                 <button data-action="PROCESAR">Procesar</button>
                 <button data-action="ESCALAR" class="critical">Escalar</button>
-                <button data-action="APOYAR">Apoyar</button>
+                <button data-action="REPORTAR">Apoyar</button>
                 <button data-action="DOCUMENTAR">Cerrar</button>
             </div>
             <div id="messageArea" class="message-area">
@@ -297,15 +297,17 @@
         const EVENT_SPAWN_RATE_MS = 3200; 
 
         const eventTypes = [
-            { name: "Consulta nómina", type: "QUERY_PAYROLL", requiredAction: "INFORMAR", points: 10, narrator: "Duda sobre nómina. ¡Claridad!" },
-            { name: "Fallo Portal Empleado", type: "TECHNICAL_ISSUE", requiredAction: "RESOLVER", points: 15, narrator: "¡Acceso denegado! Ayuda." },
+            { name: "Consulta nómina", type: "QUERY_PAYROLL", requiredAction: "ESPECIALISTA", points: 10, narrator: "Duda sobre nómina. ¡Escalar!" },
+            { name: "Consulta política nómina", type: "QUERY_PAYROLL", requiredAction: "INFORMAR", points: 10, narrator: "Duda sobre política nómina. ¡Informar!" },
+            { name: "Fallo Portal Empleado", type: "TECHNICAL_ISSUE", requiredAction: "REPORTAR", points: 15, narrator: "¡Acceso denegado! Ayuda." },
             { name: "Solicitud vacaciones", type: "REQUEST_LEAVE", requiredAction: "PROCESAR", points: 10, narrator: "Merecido descanso. Procesa." },
-            { name: "Duda seguro médico", type: "QUERY_BENEFITS", requiredAction: "INFORMAR", points: 10, narrator: "Beneficios importantes. Explica." },
+            { name: "Duda seguro médico", type: "QUERY_BENEFITS", requiredAction: "ESPECIALISTA", points: 10, narrator: "Beneficios importantes. Escala." },
             { name: "Reporte acoso (URGENTE)", type: "URGENT_CONFLICT", class: "urgent", requiredAction: "ESCALAR", points: 30, penalty: 2, narrator: "¡ALERTA! Situación delicada. Escala YA." },
             { name: "Cambio datos personales", type: "DATA_CHANGE", requiredAction: "PROCESAR", points: 5, narrator: "Actualización de datos." },
-            { name: "Empleado/a estresado/a", type: "EMOTIONAL_SUPPORT", class: "complex", requiredAction: "APOYAR", points: 20, narrator: "Necesita ser escuchado/a. Apoya." },
-            { name: "Duda teletrabajo", type: "POLICY_QUERY", requiredAction: "INFORMAR", points: 10, narrator: "Teletrabajo. Aclara política." },
-            { name: "Error registro horario", type: "TIME_TRACKING_ERROR", requiredAction: "RESOLVER", points: 10, narrator: "Error en fichaje. ¡Corrige!" },
+            { name: "Empleado/a estresado/a", type: "EMOTIONAL_SUPPORT", class: "complex", requiredAction: "ESCALAR", points: 20, narrator: "Necesita ser escuchado/a. Escala." },
+            { name: "Duda política teletrabajo", type: "POLICY_QUERY", requiredAction: "INFORMAR", points: 10, narrator: "Teletrabajo. Aclara política." },
+            { name: "Duda su teletrabajo", type: "POLICY_QUERY", requiredAction: "ESPECIALISTA", points: 10, narrator: "Duda personal Teletrabajo. Escala" },
+            { name: "Error registro horario", type: "TIME_TRACKING_ERROR", requiredAction: "PROCESAR", points: 10, narrator: "Error en fichaje. ¡Corrige!" },
             { name: "Solicitud certificado", type: "CERTIFICATE_REQUEST", requiredAction: "PROCESAR", points: 5, narrator: "Piden certificado. ¡Adelante!" },
             { name: "Feedback positivo (cerrar)", type: "POSITIVE_FEEDBACK", requiredAction: "DOCUMENTAR", points: 5, narrator: "¡Buenas noticias! Documenta." }
         ]; // Narrador más corto para móviles
